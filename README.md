@@ -53,7 +53,7 @@ The web API for each node exposes two endpoints:
 
 For example, Monogram Bank and Hiseville Deposit Bank may enter into an agreement by visiting the following URL:
 
-    http://localhost:10007/api/a/propose-agreement?counterparty=O=Hiseville Deposit Bank,L=Sao Paulo,C=BR&agreement=A and B agree Y
+    http://localhost:10007/api/a/propose-agreement?counterparty=Hiseville Deposit Bank&agreement=A and B agree Y
 
 You should see the following message:
 
@@ -70,7 +70,7 @@ If you now visit `http://localhost:10007/api/a/agreements`, you should see the a
     
 However, if you visit the following URL to attempt to enter into an agreement with George State Bank:
 
-    http://localhost:10007/api/a/propose-agreement?counterparty=O=George State Bank,L=New York,C=US&agreement=A and B agree Y
+    http://localhost:10007/api/a/propose-agreement?counterparty=George State Bank&agreement=A and B agree Y
     
 You will see the following message:
 
