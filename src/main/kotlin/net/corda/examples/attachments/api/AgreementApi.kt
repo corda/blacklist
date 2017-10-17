@@ -43,8 +43,7 @@ class AgreementApi(private val rpcOps: CordaRPCOps) {
             Response.status(CREATED).entity("Agreement reached.").build()
 
         } catch (ex: AttachmentResolutionException) {
-            // TODO: Explain how to upload the blacklist in the error message.
-            val msg = "You must upload the jar containing the blacklisted parties first."
+            val msg = "You must upload the jar containing the blacklisted parties first. See the readme for instructions."
             Response.status(BAD_REQUEST).entity(msg).build()
 
         } catch (ex: Throwable) {
