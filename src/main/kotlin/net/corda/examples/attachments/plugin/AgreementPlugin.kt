@@ -6,4 +6,6 @@ import java.util.function.Function
 
 class AgreementPlugin : WebServerPluginRegistry {
     override val webApis = listOf(Function(::AgreementApi))
+
+    override val staticServeDirs = mapOf("a" to javaClass.classLoader.getResource("blacklistWeb").toExternalForm())
 }

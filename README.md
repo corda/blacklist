@@ -27,15 +27,33 @@ See https://docs.corda.net/getting-set-up.html.
 
 See https://docs.corda.net/tutorial-cordapp.html#running-the-example-cordapp.
 
-## Interacting with the nodes:
+## Uploading the blacklist:
 
-Before attempting to reach any agreements, you must upload the blacklist as an attachment to each node. Run the 
-following command from within the `attachments` folder:
+Before attempting to reach any agreements, you must upload the blacklist as an attachment to each node that you want to 
+be able to *initiate* an agreement. The blacklist can be uploaded via RPC or HTTP.
+
+### Via RPC
+
+Run the following command from within the `attachments` folder:
 
 * Unix/Mac OSX: `./gradlew uploadBlacklist`
 * Windows: `gradlew uploadBlacklist`
 
 You should see three messages of the form `Blacklist uploaded to node via localhost:100XX`.
+
+### Via HTTP
+
+Visit the web API of the node for which you want to upload the attachment. Each node exposes their web API on a 
+different address:
+
+* Monogram Bank: `localhost:10007/web/a`
+* Hiseville Deposit Bank: `localhost:10010/web/a`
+* George State Bank: `localhost:10013/web/a`
+
+Click `Choose file` to select the .jar containing the blacklist (under `src/main/resources/blacklist.jar`) and 
+click `Upload blacklist` to upload it to the node.
+
+## Interacting with the nodes:
 
 You can now interact with this CorDapp using its web API. Each node exposes this web API on a different address:
 
