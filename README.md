@@ -46,9 +46,9 @@ You should see three messages of the form `Blacklist uploaded to node via localh
 Visit the web API of the node for which you want to upload the attachment. Each node exposes their web API on a 
 different address:
 
-* Monogram Bank: `localhost:10007/web/a`
-* Hiseville Deposit Bank: `localhost:10010/web/a`
-* George State Bank: `localhost:10013/web/a`
+* Monogram Bank: `localhost:10007/`
+* Hiseville Deposit Bank: `localhost:10010/`
+* George State Bank: `localhost:10013/`
 
 Click `Choose file` to select the .jar containing the blacklist (under `src/main/resources/blacklist.jar`) and 
 click `Upload blacklist` to upload it to the node.
