@@ -34,7 +34,7 @@ be able to *initiate* an agreement. The blacklist can be uploaded via RPC or HTT
 
 ### Via RPC
 
-Run the following command from within the `attachments` folder:
+Run the following command from the project's root folder:
 
 * Unix/Mac OSX: `./gradlew uploadBlacklist`
 * Windows: `gradlew uploadBlacklist`
@@ -43,23 +43,24 @@ You should see three messages of the form `Blacklist uploaded to node via localh
 
 ### Via HTTP
 
-Visit the web API of the node for which you want to upload the attachment. Each node exposes their web API on a 
-different address:
+Each node exposes a front-end for uploading the blacklist:
 
-* Monogram Bank: `localhost:10007/`
-* Hiseville Deposit Bank: `localhost:10010/`
-* George State Bank: `localhost:10013/`
+* Monogram Bank: `localhost:10007/web/a`
+* Hiseville Deposit Bank: `localhost:10010/web/a`
+* George State Bank: `localhost:10013/web/a`
 
-Click `Choose file` to select the .jar containing the blacklist (under `src/main/resources/blacklist.jar`) and 
-click `Upload blacklist` to upload it to the node.
+For the node you want to upload the blacklist to:
+
+* Click `Choose file` to select the .jar containing the blacklist (under `src/main/resources/blacklist.jar`)
+* Click `Upload blacklist` to upload it to the node
 
 ## Interacting with the nodes:
 
 You can now interact with this CorDapp using its web API. Each node exposes this web API on a different address:
 
-* Monogram Bank: `localhost:10007/web/option`
-* Hiseville Deposit Bank: `localhost:10010/web/option`
-* George State Bank: `localhost:10013/web/option`
+* Monogram Bank: `localhost:10007/`
+* Hiseville Deposit Bank: `localhost:10010/`
+* George State Bank: `localhost:10013/`
 
 Note that George State Bank is a blacklisted entity, and the `AgreementContract` will prevent it from entering into 
 agreements with other nodes.
