@@ -12,7 +12,7 @@ import net.corda.examples.attachments.state.AgreementState
 open class AgreementContract : Contract {
     companion object {
         val AGREEMENT_CONTRACT_ID = "net.corda.examples.attachments.contract.AgreementContract"
-        val BLACKLIST_JAR_HASH = SecureHash.parse("709FF97D2CAE131B0B8503DF49B897412DE736AAB9519D3D0BDC473559960B70")
+        val BLACKLIST_JAR_HASH = SecureHash.parse("4CEC607599723D7E0393EB5F05F24562732CD1B217DEAEDEABD4C25AFE5B333A")
     }
 
     override fun verify(tx: LedgerTransaction) = requireThat {
@@ -34,8 +34,9 @@ open class AgreementContract : Contract {
         "The jar's hash should be correct" using (attachment.id == BLACKLIST_JAR_HASH)
 
         val attachmentJar = attachment.openAsJAR()
-        "The attachment jar's first entry should be entitled blacklist.txt" using 
-                (attachmentJar.nextEntry.name == "blacklist.txt")
+        while (attachmentJar.nextEntry.name != "blacklist.txt") {
+            // Calling `attachmentJar.nextEntry` causes us to scroll through the JAR.
+        }
 
         // Constraints on the blacklisted parties.
         val blacklistedCompanies = attachmentJar.bufferedReader().readLines()
