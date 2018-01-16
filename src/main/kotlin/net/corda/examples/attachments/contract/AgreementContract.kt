@@ -7,6 +7,7 @@ import net.corda.core.contracts.requireThat
 import net.corda.core.crypto.SecureHash
 import net.corda.core.transactions.LedgerTransaction
 import net.corda.examples.attachments.state.AgreementState
+import java.util.jar.JarFile
 
 
 open class AgreementContract : Contract {
@@ -33,13 +34,20 @@ open class AgreementContract : Contract {
         // the attachments used to just those signed by party X.
         "The jar's hash should be correct" using (attachment.id == BLACKLIST_JAR_HASH)
 
+        // We extract the blacklisted company names from the JAR.
         val attachmentJar = attachment.openAsJAR()
         while (attachmentJar.nextEntry.name != "blacklist.txt") {
             // Calling `attachmentJar.nextEntry` causes us to scroll through the JAR.
         }
+        val blacklistedCompanies = mutableListOf<String>()
+        val bufferedReader = attachmentJar.bufferedReader()
+        var company = bufferedReader.readLine()
+        while (company != null) {
+            blacklistedCompanies.add(company)
+            company = bufferedReader.readLine()
+        }
 
         // Constraints on the blacklisted parties.
-        val blacklistedCompanies = attachmentJar.bufferedReader().readLines()
         val agreement = tx.outputsOfType<AgreementState>().single()
         val participants = agreement.participants
         val participantsOrgs = participants.map { it.name.organisation }
