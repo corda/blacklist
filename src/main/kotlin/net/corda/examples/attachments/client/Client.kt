@@ -1,4 +1,4 @@
-package net.corda.examples.attachments.client
+    package net.corda.examples.attachments.client
 
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.core.crypto.SecureHash
@@ -65,9 +65,11 @@ private fun downloadAttachment(proxy: CordaRPCOps, attachmentHash: SecureHash): 
  * Checks the [expectedFileName] and [expectedContents] of the downloaded [attachmentJar].
  */
 private fun checkAttachment(attachmentJar: JarInputStream, expectedFileName: String, expectedContents: List<String>) {
-    while (attachmentJar.nextEntry.name != expectedFileName) {
-        attachmentJar.nextEntry
+    var name = attachmentJar.nextEntry.name
+    while (name != expectedFileName) {
+        name = attachmentJar.nextEntry.name
     }
+    
     val contents = attachmentJar.bufferedReader().readLines()
 
     if (contents != expectedContents) {
