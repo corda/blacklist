@@ -2,10 +2,8 @@ package net.corda.examples.attachments.tests
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
-import net.corda.node.services.transactions.ValidatingNotaryService
-import net.corda.nodeapi.User
-import net.corda.nodeapi.internal.ServiceInfo
 import net.corda.testing.driver.driver
+import net.corda.testing.node.User
 
 /**
  * This file is exclusively for being able to run your nodes through an IDE (as opposed to using deployNodes)
@@ -25,10 +23,9 @@ fun main(args: Array<String>) {
     val user = User("user1", "test", permissions = setOf())
     driver(startNodesInProcess = true,
             extraCordappPackagesToScan = listOf("net.corda.examples.attachments"),
-            isDebug = true) {
+            isDebug = true, waitForAllNodesToFinish = true) {
 
-        val (_, nodeA, nodeB, nodeC) = listOf(
-                startNode(providedName = CordaX500Name("Controller", "London", "GB"), advertisedServices = setOf(ServiceInfo(ValidatingNotaryService.type))),
+        val (nodeA, nodeB, nodeC) = listOf(
                 startNode(providedName = CordaX500Name("Monogram Bank", "London", "GB"), rpcUsers = listOf(user)),
                 startNode(providedName = CordaX500Name("Hiseville Deposit Bank", "Sao Paulo", "BR"), rpcUsers = listOf(user)),
                 startNode(providedName = CordaX500Name("George State Bank", "New York", "US"), rpcUsers = listOf(user))).map { it.getOrThrow() }
@@ -36,7 +33,5 @@ fun main(args: Array<String>) {
         startWebserver(nodeA)
         startWebserver(nodeB)
         startWebserver(nodeC)
-
-        waitForAllNodesToFinish()
     }
 }

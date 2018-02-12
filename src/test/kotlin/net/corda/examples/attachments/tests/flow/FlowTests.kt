@@ -6,16 +6,15 @@ import net.corda.core.identity.Party
 import net.corda.core.node.services.queryBy
 import net.corda.core.transactions.SignedTransaction
 import net.corda.core.utilities.getOrThrow
+import net.corda.examples.attachments.BLACKLIST_JAR_PATH
 import net.corda.examples.attachments.flow.AgreeFlow
 import net.corda.examples.attachments.flow.ProposeFlow
-import net.corda.examples.attachments.BLACKLIST_JAR_PATH
-import net.corda.examples.attachments.tests.INCORRECT_JAR_PATH
 import net.corda.examples.attachments.state.AgreementState
+import net.corda.examples.attachments.tests.INCORRECT_JAR_PATH
 import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
 import net.corda.testing.node.MockNetwork.MockNode
-import net.corda.testing.setCordappPackages
-import net.corda.testing.unsetCordappPackages
+import net.corda.testing.node.startFlow
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -36,13 +35,10 @@ class FlowTests {
 
     @Before
     fun setup() {
-        setCordappPackages("net.corda.examples.attachments")
+        network = MockNetwork(listOf("net.corda.examples.attachments.contract"))
 
-        network = MockNetwork()
-
-        val nodes = network.createSomeNodes(2)
-        a = nodes.partyNodes[0]
-        b = nodes.partyNodes[1]
+        a = network.createNode()
+        b = network.createNode()
         aIdentity = a.info.legalIdentities.first()
         bIdentity = b.info.legalIdentities.first()
 
@@ -70,13 +66,12 @@ class FlowTests {
     @After
     fun tearDown() {
         network.stopNodes()
-        unsetCordappPackages()
     }
 
     @Test
     fun `flow rejects attachments that do not meet the constraints of AttachmentContract`() {
         val flow = ProposeFlow(agreementTxt, incorrectAttachment, bIdentity)
-        val future = a.services.startFlow(flow).resultFuture
+        val future = a.services.startFlow(flow)
         network.runNetwork()
         assertFailsWith<TransactionVerificationException> { future.getOrThrow() }
     }
@@ -144,7 +139,7 @@ class FlowTests {
     // Uses the propose flow to record an agreement on the ledger.
     private fun reachAgreement(): SignedTransaction {
         val flow = ProposeFlow(agreementTxt, blacklistAttachment, bIdentity)
-        val future = a.services.startFlow(flow).resultFuture
+        val future = a.services.startFlow(flow)
         network.runNetwork()
         return future.getOrThrow()
     }
