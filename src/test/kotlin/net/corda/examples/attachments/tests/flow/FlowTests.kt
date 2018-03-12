@@ -46,14 +46,14 @@ class FlowTests {
         // flow.
         val attachmentInputStream = File(BLACKLIST_JAR_PATH).inputStream()
         a.transaction {
-            blacklistAttachment = a.services.attachments.importAttachment(attachmentInputStream)
+            blacklistAttachment = a.services.attachments.importAttachment(attachmentInputStream, "user", "blacklist")
         }
 
         // We upload the invalid attachment to the first node, who will propagate it to the other node as part of the
         // flow.
         val incorrectAttachmentInputStream = File(INCORRECT_JAR_PATH).inputStream()
         a.transaction {
-            incorrectAttachment = a.services.attachments.importAttachment(incorrectAttachmentInputStream)
+            incorrectAttachment = a.services.attachments.importAttachment(incorrectAttachmentInputStream, "user", "blacklist")
         }
 
         b.registerInitiatedFlow(AgreeFlow::class.java)
