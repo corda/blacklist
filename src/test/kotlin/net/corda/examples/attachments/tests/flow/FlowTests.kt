@@ -11,10 +11,8 @@ import net.corda.examples.attachments.flow.AgreeFlow
 import net.corda.examples.attachments.flow.ProposeFlow
 import net.corda.examples.attachments.state.AgreementState
 import net.corda.examples.attachments.tests.INCORRECT_JAR_PATH
-import net.corda.node.internal.StartedNode
 import net.corda.testing.node.MockNetwork
-import net.corda.testing.node.MockNetwork.MockNode
-import net.corda.testing.node.startFlow
+import net.corda.testing.node.StartedMockNode
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -25,8 +23,8 @@ import kotlin.test.assertNotNull
 
 class FlowTests {
     private lateinit var network: MockNetwork
-    private lateinit var a: StartedNode<MockNode>
-    private lateinit var b: StartedNode<MockNode>
+    private lateinit var a: StartedMockNode
+    private lateinit var b: StartedMockNode
     private lateinit var aIdentity: Party
     private lateinit var bIdentity: Party
     private lateinit var agreementTxt: String
@@ -47,15 +45,15 @@ class FlowTests {
         // We upload the valid attachment to the first node, who will propagate it to the other node as part of the
         // flow.
         val attachmentInputStream = File(BLACKLIST_JAR_PATH).inputStream()
-        a.database.transaction {
-            blacklistAttachment = a.attachments.importAttachment(attachmentInputStream)
+        a.transaction {
+            blacklistAttachment = a.services.attachments.importAttachment(attachmentInputStream)
         }
 
         // We upload the invalid attachment to the first node, who will propagate it to the other node as part of the
         // flow.
         val incorrectAttachmentInputStream = File(INCORRECT_JAR_PATH).inputStream()
-        a.database.transaction {
-            incorrectAttachment = a.attachments.importAttachment(incorrectAttachmentInputStream)
+        a.transaction {
+            incorrectAttachment = a.services.attachments.importAttachment(incorrectAttachmentInputStream)
         }
 
         b.registerInitiatedFlow(AgreeFlow::class.java)
@@ -71,7 +69,7 @@ class FlowTests {
     @Test
     fun `flow rejects attachments that do not meet the constraints of AttachmentContract`() {
         val flow = ProposeFlow(agreementTxt, incorrectAttachment, bIdentity)
-        val future = a.services.startFlow(flow)
+        val future = a.startFlow(flow)
         network.runNetwork()
         assertFailsWith<TransactionVerificationException> { future.getOrThrow() }
     }
@@ -102,8 +100,8 @@ class FlowTests {
 
             // Checks on the attachments.
             val attachments = recordedTx.tx.attachments
-            assertEquals(1, attachments.size)
-            assertEquals(blacklistAttachment, attachments.single())
+            assertEquals(2, attachments.size)
+            assertEquals(blacklistAttachment, attachments[0])
         }
     }
 
@@ -113,7 +111,7 @@ class FlowTests {
 
         // We check the recorded agreement in both vaults.
         listOf(a, b).forEach { node ->
-            node.database.transaction {
+            node.transaction {
                 val agreements = node.services.vaultService.queryBy<AgreementState>().states
                 assertEquals(1, agreements.size)
 
@@ -130,7 +128,7 @@ class FlowTests {
         reachAgreement()
 
         // We check the recorded agreement in both attachment storages.
-        b.database.transaction {
+        b.transaction {
             val blacklist = b.services.attachments.openAttachment(blacklistAttachment)
             assertNotNull(blacklist)
         }
@@ -139,7 +137,7 @@ class FlowTests {
     // Uses the propose flow to record an agreement on the ledger.
     private fun reachAgreement(): SignedTransaction {
         val flow = ProposeFlow(agreementTxt, blacklistAttachment, bIdentity)
-        val future = a.services.startFlow(flow)
+        val future = a.startFlow(flow)
         network.runNetwork()
         return future.getOrThrow()
     }

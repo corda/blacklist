@@ -2,6 +2,7 @@ package net.corda.examples.attachments.tests
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
+import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.driver
 import net.corda.testing.node.User
 
@@ -21,9 +22,9 @@ import net.corda.testing.node.User
 fun main(args: Array<String>) {
     // No permissions required as we are not invoking flows.
     val user = User("user1", "test", permissions = setOf())
-    driver(startNodesInProcess = true,
+    driver(DriverParameters(startNodesInProcess = true,
             extraCordappPackagesToScan = listOf("net.corda.examples.attachments"),
-            isDebug = true, waitForAllNodesToFinish = true) {
+            isDebug = true, waitForAllNodesToFinish = true)) {
 
         val (nodeA, nodeB, nodeC) = listOf(
                 startNode(providedName = CordaX500Name("Monogram Bank", "London", "GB"), rpcUsers = listOf(user)),
