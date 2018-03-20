@@ -21,7 +21,7 @@ import net.corda.testing.node.User
  */
 fun main(args: Array<String>) {
     // No permissions required as we are not invoking flows.
-    val user = User("user1", "test", permissions = setOf())
+    val user = User("user1", "test", permissions = setOf("ALL"))
     driver(DriverParameters(startNodesInProcess = true,
             extraCordappPackagesToScan = listOf("net.corda.examples.attachments"),
             isDebug = true, waitForAllNodesToFinish = true)) {
