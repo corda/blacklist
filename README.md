@@ -45,9 +45,9 @@ You should see three messages of the form `Blacklist uploaded to node via localh
 
 Each node exposes a front-end for uploading the blacklist:
 
-* Monogram Bank: `localhost:10009/web/a`
-* Hiseville Deposit Bank: `localhost:10012/web/a`
-* George State Bank: `localhost:10015/web/a`
+* Monogram Bank: `localhost:10008/web/a`
+* Hiseville Deposit Bank: `localhost:10011/web/a`
+* George State Bank: `localhost:10014/web/a`
 
 For the node you want to upload the blacklist to:
 
@@ -58,9 +58,9 @@ For the node you want to upload the blacklist to:
 
 You can now interact with this CorDapp using its web API. Each node exposes this web API on a different address:
 
-* Monogram Bank: `localhost:10009/`
-* Hiseville Deposit Bank: `localhost:10012/`
-* George State Bank: `localhost:10015/`
+* Monogram Bank: `localhost:10008/`
+* Hiseville Deposit Bank: `localhost:10011/`
+* George State Bank: `localhost:10014/`
 
 Note that George State Bank is a blacklisted entity, and the `AgreementContract` will prevent it from entering into 
 agreements with other nodes.
@@ -72,13 +72,13 @@ The web API for each node exposes two endpoints:
 
 For example, Monogram Bank and Hiseville Deposit Bank may enter into an agreement by visiting the following URL:
 
-    http://localhost:10009/api/a/propose-agreement?counterparty=Hiseville Deposit Bank&agreement=A and B agree Y
+    http://localhost:10008/api/a/propose-agreement?counterparty=Hiseville Deposit Bank&agreement=A and B agree Y
 
 You should see the following message:
 
     Agreement reached.
 
-If you now visit `http://localhost:10009/api/a/agreements`, you should see the agreement stored on the node:
+If you now visit `http://localhost:10008/api/a/agreements`, you should see the agreement stored on the node:
 
     [ {
       "partyA" : "C=GB,L=London,O=Monogram Bank",
@@ -89,7 +89,7 @@ If you now visit `http://localhost:10009/api/a/agreements`, you should see the a
     
 However, if you visit the following URL to attempt to enter into an agreement with George State Bank:
 
-    http://localhost:10009/api/a/propose-agreement?counterparty=George State Bank&agreement=A and B agree Y
+    http://localhost:10008/api/a/propose-agreement?counterparty=George State Bank&agreement=A and B agree Y
     
 You will see the following message:
 
